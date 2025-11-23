@@ -7,3 +7,4 @@ export { RootAllomorph } from './RootAllomorph.js';
 export { LexEntry } from './LexEntry.js';
 export { LexFamily } from './LexFamily.js';
 export { Word } from './Word.js';
+export { AffixTemplate, AffixSlot } from './AffixTemplate.js';

@@ -19,5 +19,11 @@ export * from './core/index.js';
 // Morphology
 export * from './morphology/index.js';
 
+// Patterns
+export * from './patterns/index.js';
+
+// Rules
+export * from './rules/index.js';
+
 // Version
 export const VERSION = '0.1.0';

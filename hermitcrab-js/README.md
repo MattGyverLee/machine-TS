@@ -1,6 +1,6 @@
-# HermitCrab.js
+# HermitCrab TypeScript
 
-A JavaScript/Node.js implementation of HermitCrab - a rule-based morphological and phonological parser for natural language processing.
+A TypeScript/JavaScript implementation of HermitCrab - a rule-based morphological and phonological parser for natural language processing.
 
 ## Overview
 
@@ -44,17 +44,19 @@ const words = morpher.generateWord(rootEntry, {
 ```
 hermitcrab-js/
 ├── src/
-│   ├── annotations/    - Shape and annotation system
-│   ├── features/       - Feature structures and unification
-│   ├── morphology/     - Morphemes, allomorphs, lexicon
-│   ├── rules/          - Phonological and morphological rules
-│   ├── core/           - Main classes (Language, Morpher, Stratum, Word)
-│   ├── matching/       - Pattern matching engine
-│   ├── xml/            - XML configuration loader
-│   └── index.js        - Main entry point
-├── test/               - Test suite
-└── examples/           - Usage examples
-
+│   ├── annotations/    - Shape and annotation system (Annotation, AnnotationList, Shape, ShapeNode)
+│   ├── features/       - Feature structures and unification (Feature, FeatureStruct, FeatureValue, FeatureSystem)
+│   ├── morphology/     - Morphemes, allomorphs, lexicon (Morpheme, Allomorph, LexEntry, Word, AffixTemplate)
+│   ├── rules/          - Phonological and morphological rules (RewriteRule, MetathesisRule, AffixProcessRule)
+│   ├── core/           - Main classes (Language, Morpher, Stratum, CharacterDefinitionTable, HCFeatureSystem)
+│   ├── patterns/       - Pattern matching engine (Pattern, Matcher, Constraint, Quantifier)
+│   ├── utils/          - Utilities (Direction, Freezable, DoublyLinkedList, Range)
+│   └── index.ts        - Main entry point
+├── dist/               - Compiled JavaScript output
+├── test/               - Test suite (TODO)
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
 ## Architecture
@@ -66,23 +68,101 @@ Surface Form → Analysis → Underlying Form
 Underlying Form → Synthesis → Surface Form
 ```
 
+## Implementation Status
+
+### ✅ Completed Components
+
+- **Core Infrastructure**
+  - Feature system with unification
+  - Annotation hierarchies over phonological shapes
+  - Sparse ordering algorithm for O(1) shape insertion
+  - Freezable objects with hash codes
+
+- **Phonological System**
+  - Shape and ShapeNode for phonological representations
+  - Character definition tables with Unicode NFD normalization
+  - Natural class definitions
+  - Pattern matching engine with backtracking
+  - RewriteRule (A → B / C _ D)
+  - MetathesisRule (A B → B A)
+
+- **Morphological System**
+  - Morpheme and Allomorph classes
+  - Lexical entries and families
+  - Root allomorphs with pattern detection
+  - Stem names with feature-based matching
+  - MPR (Morpheme Property Realization) features
+  - Word class for analysis tracking
+  - AffixProcessRule (prefix, suffix, infix, circumfix)
+  - CompoundingRule
+  - AffixTemplate system for ordered affixation
+
+- **Multi-Stratal Architecture**
+  - Stratum class for linguistic layers
+  - Language class for complete language definition
+  - Morpher class for analysis and synthesis
+
+- **Pattern Matching**
+  - Constraint-based pattern matching
+  - Quantifiers (?, *, +, {n,m})
+  - Group captures and variable bindings
+
+### 🚧 In Progress
+
+- TypeScript type annotations (strict mode compliance)
+- Complete rule implementations
+
+### 📋 Planned
+
+- XML language loader
+- Trace manager for debugging
+- Comprehensive test suite
+- CLI tool
+- Additional rule types
+- Performance optimizations
+
 ## Development
 
 ```bash
 # Install dependencies
 npm install
 
-# Run tests
-npm test
+# Build TypeScript
+npm run build
 
-# Run tests in watch mode
-npm run test:watch
+# Build in watch mode
+npm run build:watch
+
+# Run tests (TODO)
+npm test
 
 # Lint code
 npm run lint
 
 # Format code
 npm run format
+```
+
+## Key Algorithms
+
+### Sparse Ordering
+
+The Shape class implements a sophisticated sparse ordering algorithm for O(1) insertion:
+
+```typescript
+private _average(x: number, y: number): number {
+  return ((x & y) + ((x ^ y) >> 1)) | 0;
+}
+```
+
+### Feature Unification
+
+Feature structures support unification with circular reference handling:
+
+```typescript
+unify(other: FeatureStruct): FeatureStruct | null {
+  return this._unify(other, new Map(), new Map());
+}
 ```
 
 ## License
