@@ -16,5 +16,8 @@ export * from './features/index.js';
 // HermitCrab core
 export * from './core/index.js';
 
+// Morphology
+export * from './morphology/index.js';
+
 // Version
 export const VERSION = '0.1.0';
